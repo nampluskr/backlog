@@ -1,0 +1,43 @@
+{
+  "$schema_version": "1",
+  "meta": {
+    "updated": "2026-08-28",
+    "context_doc": null,
+    "note": null
+  },
+  "enums": {
+    "status": ["todo", "in_progress", "blocked", "done"],
+    "priority": ["P0", "P1", "P2"],
+    "category": ["env", "io", "check"]
+  },
+  "tasks": [
+    {
+      "id": "YD-001",
+      "status": "todo",
+      "priority": null,
+      "category": "env",
+      "title": "youtube prefix",
+      "summary": null,
+      "where": null,
+      "doc": null,
+      "note": null,
+      "parent": null,
+      "deps": [],
+      "done_at": null
+    },
+    {
+      "id": "ST-001",
+      "status": "todo",
+      "priority": null,
+      "category": "io",
+      "title": "transcriber prefix",
+      "summary": null,
+      "where": null,
+      "doc": null,
+      "note": null,
+      "parent": null,
+      "deps": [],
+      "done_at": null
+    }
+  ]
+}

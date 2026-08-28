@@ -1,0 +1,14 @@
+{
+  "$schema_version": "1",
+  "meta": {
+    "updated": "2026-08-28",
+    "context_doc": null,
+    "note": null
+  },
+  "enums": {
+    "status": ["todo", "in_progress", "blocked", "done"],
+    "priority": ["P0", "P1", "P2"],
+    "category": ["env", "io", "check"]
+  },
+  "tasks": []
+}

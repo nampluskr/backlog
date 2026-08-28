@@ -1,0 +1,43 @@
+{
+  "$schema_version": "1",
+  "meta": {
+    "updated": "2026-08-28",
+    "context_doc": "SPEC.md",
+    "note": null
+  },
+  "enums": {
+    "status": ["todo", "in_progress", "blocked", "done"],
+    "priority": ["P0", "P1", "P2"],
+    "category": ["env", "io", "check"]
+  },
+  "tasks": [
+    {
+      "id": "AA-001",
+      "status": "done",
+      "priority": "P0",
+      "category": "env",
+      "title": "first task",
+      "summary": null,
+      "where": "src/",
+      "doc": null,
+      "note": null,
+      "parent": null,
+      "deps": [],
+      "done_at": "2026-08-27"
+    },
+    {
+      "id": "AA-002",
+      "status": "todo",
+      "priority": null,
+      "category": "io",
+      "title": "second task",
+      "summary": "depends on the first",
+      "where": null,
+      "doc": null,
+      "note": null,
+      "parent": null,
+      "deps": ["AA-001"],
+      "done_at": null
+    }
+  ]
+}

@@ -1,0 +1,292 @@
+{
+  "$schema_version": "1",
+  "meta": {
+    "updated": "2026-08-28",
+    "context_doc": "SPEC.md",
+    "note": "backlog CLI(파이썬) 자체의 작업 SSOT. self-hosting — Phase 1 완성 후 `python -m backlog validate --file backlog.json` 로 자기 검증. priority P{n} = Phase 번호. deps 는 권장 순서. 계약은 SPEC.md, 근거는 DECISIONS.md, 구현 순서는 PLAN.md. 참조 구현: d:\\projects\\vibe-coding-claude\\day4\\workflow-hub."
+  },
+  "enums": {
+    "status": [
+      "todo",
+      "in_progress",
+      "blocked",
+      "done"
+    ],
+    "priority": [
+      "P0",
+      "P1",
+      "P2",
+      "P3",
+      "P4"
+    ],
+    "category": [
+      "환경",
+      "io",
+      "검증",
+      "조회",
+      "변경",
+      "통합"
+    ]
+  },
+  "tasks": [
+    {
+      "id": "BL-001",
+      "status": "done",
+      "priority": "P0",
+      "category": "환경",
+      "title": "스캐폴드 — pyproject + 패키지 뼈대",
+      "summary": "완료: pip install -e . 후 python -m backlog --help 가 5개 서브커맨드를 보여준다",
+      "where": "backlog/",
+      "parent": null,
+      "deps": [],
+      "doc": "PLAN.md#phase-0",
+      "done_at": "2026-08-28",
+      "note": "pyproject.toml [project.scripts] backlog = \"backlog.cli:main\". src/ 레이아웃. stdlib 만, 외부 패키지 금지"
+    },
+    {
+      "id": "BL-002",
+      "status": "done",
+      "priority": "P0",
+      "category": "환경",
+      "title": "errors.py — 종료 코드 상수와 예외 계층",
+      "summary": "완료: OK=0 DATA=1 ARGS=2 IO=3 상수와 FileReadError/DocumentParseError/FileWriteError 예외가 있다",
+      "where": "src/backlog/errors.py",
+      "parent": null,
+      "deps": [
+        "BL-001"
+      ],
+      "doc": "SPEC.md#7-종료-코드",
+      "done_at": "2026-08-28",
+      "note": "참조 backlog.mjs 의 EXIT_CODES 와 document-io.mjs 예외 3종에 대응"
+    },
+    {
+      "id": "BL-003",
+      "status": "done",
+      "priority": "P0",
+      "category": "환경",
+      "title": "cli.py argparse 골격",
+      "summary": "완료: 최상위 --file(기본 ./backlog.json) + validate/list/show/add/update subparser. 핸들러는 NotImplementedError",
+      "where": "src/backlog/cli.py",
+      "parent": "BL-001",
+      "deps": [
+        "BL-002"
+      ],
+      "doc": "SPEC.md#3-명령",
+      "done_at": "2026-08-28",
+      "note": "--file 은 서브커맨드 앞에 온다. add/update 옵션 정의도 여기서 못 박는다"
+    },
+    {
+      "id": "BL-004",
+      "status": "done",
+      "priority": "P1",
+      "category": "io",
+      "title": "document_io.py — 읽기",
+      "summary": "완료: read_document(path) 가 IO 실패는 FileReadError, JSON 문법 실패는 DocumentParseError 로 구분한다",
+      "where": "src/backlog/document_io.py",
+      "parent": null,
+      "deps": [
+        "BL-002"
+      ],
+      "doc": "PLAN.md#phase-1",
+      "done_at": "2026-08-28",
+      "note": "호출부가 종료 코드 3(IO) vs 1(파싱)로 매핑할 수 있어야 한다"
+    },
+    {
+      "id": "BL-005",
+      "status": "done",
+      "priority": "P1",
+      "category": "io",
+      "title": "document_io.py — 원자적 쓰기",
+      "summary": "완료: write_document(path, doc) 가 같은 디렉터리 임시파일에 쓰고 os.replace 로 rename. 실패 시 원본 불변, 임시파일 정리",
+      "where": "src/backlog/document_io.py",
+      "parent": null,
+      "deps": [
+        "BL-004"
+      ],
+      "doc": "SPEC.md#6-안전한-저장",
+      "done_at": "2026-08-28",
+      "note": ".{base}.{pid}-{uuid}.tmp. json.dumps(ensure_ascii=False, indent=2) + 개행. Windows 에서 os.replace 는 같은 볼륨이면 원자적"
+    },
+    {
+      "id": "BL-006",
+      "status": "done",
+      "priority": "P1",
+      "category": "검증",
+      "title": "validate.py — 최상위·meta·enums·tasks 구조 검증",
+      "summary": "완료: validate_document(doc) 가 {valid, errors, task_count} 반환. 구조·타입·필수필드 오류를 code/path/message 로 보고",
+      "where": "src/backlog/validate.py",
+      "parent": null,
+      "deps": [
+        "BL-003"
+      ],
+      "doc": "SPEC.md#5-validate",
+      "done_at": "2026-08-28",
+      "note": "ErrorCode 명은 참조 validate.mjs 와 동일하게 유지"
+    },
+    {
+      "id": "BL-007",
+      "status": "done",
+      "priority": "P1",
+      "category": "검증",
+      "title": "validate.py — task 필드·enum·ID·날짜 검증",
+      "summary": "완료: id 형식 ^[A-Z]{2,}-\\d{3,}$, 중복, 접두어 혼재(ID_PREFIX_MIXED), enum 위반, title 빈값, 날짜 형식, done⟺done_at 을 검사",
+      "where": "src/backlog/validate.py",
+      "parent": "BL-006",
+      "deps": [
+        "BL-006"
+      ],
+      "doc": "DECISIONS.md#d-2",
+      "done_at": "2026-08-28",
+      "note": "ID_PREFIX_MIXED 가 참조 대비 유일한 추가 규칙 (접두어 자동 감지 전제)"
+    },
+    {
+      "id": "BL-008",
+      "status": "done",
+      "priority": "P1",
+      "category": "검증",
+      "title": "validate.py — 참조 무결성 (Pass 2)",
+      "summary": "완료: parent/deps 의 REF_MISSING, SELF_REFERENCE, DUPLICATE_DEPS_ENTRY 를 완전한 id 집합으로 검사",
+      "where": "src/backlog/validate.py",
+      "parent": "BL-006",
+      "deps": [
+        "BL-007"
+      ],
+      "doc": "SPEC.md#참조-무결성",
+      "done_at": "2026-08-28",
+      "note": "Pass 1 에서 형식 유효 id 만 모아 target set 구성, Pass 2 에서 참조 확인"
+    },
+    {
+      "id": "BL-009",
+      "status": "done",
+      "priority": "P1",
+      "category": "검증",
+      "title": "cli.py validate 연결 + fixture",
+      "summary": "완료: backlog validate 가 VALID/INVALID 를 규정대로 출력하고 종료 코드가 정확하다. backlog.json(self) 통과",
+      "where": "src/backlog/cli.py",
+      "parent": null,
+      "deps": [
+        "BL-004",
+        "BL-008"
+      ],
+      "doc": "PLAN.md#phase-1",
+      "done_at": "2026-08-28",
+      "note": "fixture: valid.json, invalid_refs.json, empty.json, mixed_prefix.json. 마일스톤 — self-hosting 파일 기계 검증 시작"
+    },
+    {
+      "id": "BL-010",
+      "status": "done",
+      "priority": "P2",
+      "category": "조회",
+      "title": "query.py — list 필터·정렬·렌더",
+      "summary": "완료: status/priority/category AND 필터, priority none 매칭, (접두어,번호) 정렬, table/json 렌더. TITLE 열은 자르지 않음",
+      "where": "src/backlog/query.py",
+      "parent": null,
+      "deps": [
+        "BL-003"
+      ],
+      "doc": "SPEC.md#list",
+      "done_at": "2026-08-28",
+      "note": "validate_filters 는 best-effort (enum 없으면 skip). 참조 list.mjs 대응"
+    },
+    {
+      "id": "BL-011",
+      "status": "done",
+      "priority": "P2",
+      "category": "조회",
+      "title": "query.py — show 조회·렌더",
+      "summary": "완료: find_task_by_id, 고정 필드 순서 text 렌더((none) 처리), json 렌더",
+      "where": "src/backlog/query.py",
+      "parent": null,
+      "deps": [
+        "BL-010"
+      ],
+      "doc": "SPEC.md#show",
+      "done_at": "2026-08-28",
+      "note": "필드 순서: id status priority category title summary where parent deps doc done_at note"
+    },
+    {
+      "id": "BL-012",
+      "status": "done",
+      "priority": "P2",
+      "category": "조회",
+      "title": "cli.py list/show 연결",
+      "summary": "완료: backlog list, backlog show <id> 가 --format 검증 포함해 동작. 빈 결과는 종료 코드 0",
+      "where": "src/backlog/cli.py",
+      "parent": null,
+      "deps": [
+        "BL-010",
+        "BL-011"
+      ],
+      "doc": "PLAN.md#phase-2",
+      "done_at": "2026-08-28",
+      "note": "json 출력은 json.loads 로 되읽을 수 있어야 한다"
+    },
+    {
+      "id": "BL-013",
+      "status": "done",
+      "priority": "P3",
+      "category": "변경",
+      "title": "mutate.py — add (접두어 감지·다음 ID·기본값)",
+      "summary": "완료: detect_prefix, compute_next_id, compute_create_fields, build_task. 빈 backlog 는 --prefix 필요",
+      "where": "src/backlog/mutate.py",
+      "parent": null,
+      "deps": [
+        "BL-008"
+      ],
+      "doc": "SPEC.md#add",
+      "done_at": "2026-08-28",
+      "note": "다음 번호 = 접두어별 최대 +1, f\"{prefix}-{n:03d}\". 삭제된 번호 재사용 안 함. none→None, deps 콤마파싱"
+    },
+    {
+      "id": "BL-014",
+      "status": "done",
+      "priority": "P3",
+      "category": "변경",
+      "title": "mutate.py — update (none→null·deps·done_at)",
+      "summary": "완료: compute_field_updates(최소 1개), apply_update(deepcopy, status 변경 시 done_at 자동), meta.updated 갱신",
+      "where": "src/backlog/mutate.py",
+      "parent": null,
+      "deps": [
+        "BL-013"
+      ],
+      "doc": "SPEC.md#update",
+      "done_at": "2026-08-28",
+      "note": "수정 불가: id, $schema_version, enums, done_at. 참조 update.mjs 대응"
+    },
+    {
+      "id": "BL-015",
+      "status": "done",
+      "priority": "P3",
+      "category": "변경",
+      "title": "cli.py add/update 연결 — 안전한 저장 순서",
+      "summary": "완료: read → parse → validate(pre) → mutate → validate(post) → write_document. 사후 검증 실패 시 저장 안 함",
+      "where": "src/backlog/cli.py",
+      "parent": null,
+      "deps": [
+        "BL-005",
+        "BL-014"
+      ],
+      "doc": "SPEC.md#6-안전한-저장",
+      "done_at": "2026-08-28",
+      "note": "인자 오류(title/category 없음, update 옵션 0개)는 파일 IO 전에 종료 코드 2. 원자성 테스트: 쓰기 직전 실패 주입 → 원본 해시 불변"
+    },
+    {
+      "id": "BL-016",
+      "status": "done",
+      "priority": "P4",
+      "category": "통합",
+      "title": "기존 두 backlog.json 검증 + README",
+      "summary": "완료: youtube_downloader/backlog.json·speech_transcriber/backlog.json 이 validate 통과. README 에 명령·예제·종료코드·단일 writer 제한 기록",
+      "where": "README.md",
+      "parent": null,
+      "deps": [
+        "BL-009",
+        "BL-012",
+        "BL-015"
+      ],
+      "doc": "PLAN.md#phase-4",
+      "done_at": "2026-08-28",
+      "note": "YD-/ST- 접두어가 통과하는지 확인. python -m unittest 전체 통과. backlog/ 를 d:\\projects\\tools\\backlog\\ 로 옮길지 결정"
+    }
+  ]
+}

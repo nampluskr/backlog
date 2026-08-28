@@ -1,0 +1,16 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "backlog"
+version = "0.1.0"
+description = "backlog.json을 작업 SSOT로 다루는 표준 라이브러리 전용 CLI"
+requires-python = ">=3.11"
+dependencies = []
+
+[project.scripts]
+backlog = "backlog.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
