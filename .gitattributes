@@ -1,0 +1,8 @@
+# Force LF in the repo for text files. backlog.json is always written with
+# "\n" by the CLI, so CRLF conversion would churn it on every add/update.
+* text=auto eol=lf
+
+*.py    text eol=lf
+*.json  text eol=lf
+*.toml  text eol=lf
+*.md    text eol=lf
