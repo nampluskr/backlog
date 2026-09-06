@@ -24,11 +24,11 @@
 WinPython(3.11.8)에 venv 없이 전역 설치한다. 표준 라이브러리만 쓰므로 추가 의존성은 없다.
 
 ```
-C:\winpython\WPy64-31180\python-3.11.8.amd64\python.exe -m pip install -e .
+C:\winpython\WPy64-31180_cpu\python-3.11.8.amd64\python.exe -m pip install -e .
 ```
 
 `[project.scripts]` 덕분에 WinPython `Scripts\` 폴더
-(`C:\winpython\WPy64-31180\python-3.11.8.amd64\Scripts`)에 `backlog.exe`가 생긴다.
+(`C:\winpython\WPy64-31180_cpu\python-3.11.8.amd64\Scripts`)에 `backlog.exe`가 생긴다.
 이 폴더가 `PATH`에 있으면 어느 디렉터리에서든 `backlog ...`로, 없으면
 `...\Scripts\backlog.exe ...` 또는 위 인터프리터로 `-m backlog ...`로 실행한다.
 설치하지 않고 쓰려면 `$env:PYTHONPATH="src"` 설정 후 위 인터프리터로 `-m backlog ...`
@@ -104,7 +104,7 @@ backlog --file backlog.json update BL-016 --status done
 
 ```
 $env:PYTHONPATH="src"
-C:\winpython\WPy64-31180\python-3.11.8.amd64\python.exe -m unittest discover -s tests
+C:\winpython\WPy64-31180_cpu\python-3.11.8.amd64\python.exe -m unittest discover -s tests
 ```
 
 정상·경계·실패 케이스를 `tests/`에 둔다. fixture는 임시 복사본만 수정한다.

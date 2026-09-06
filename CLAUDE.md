@@ -19,7 +19,7 @@ Claude Code가 이 저장소에서 작업할 때 매 턴 지켜야 하는 규칙
 - 이모지를 사용하지 않는다
 - 대상 OS는 Windows, venv 없이 설치
 - 파이썬 실행은 반드시 WinPython 절대경로를 쓴다 (맨 `python` 금지):
-  `C:\winpython\WPy64-31180\python-3.11.8.amd64\python.exe` (3.11.8)
+  `C:\winpython\WPy64-31180_cpu\python-3.11.8.amd64\python.exe` (3.11.8)
   - 소스 미설치 실행: `$env:PYTHONPATH="src"` 후 `-m backlog`
   - 설치: `<위 경로> -m pip install -e .`
 

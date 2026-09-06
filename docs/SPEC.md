@@ -26,7 +26,7 @@
 
 | 항목 | 값 |
 |---|---|
-| 파이썬 | WinPython 3.11.8 — `C:\winpython\WPy64-31180\python-3.11.8.amd64\python.exe` |
+| 파이썬 | WinPython 3.11.8 — `C:\winpython\WPy64-31180_cpu\python-3.11.8.amd64\python.exe` |
 | 격리 | venv 없이 베이스 WinPython에 설치 |
 | 의존성 | **표준 라이브러리만** (`argparse`, `json`, `os`, `sys`, `copy`, `tempfile`, `datetime`, `re`) |
 | 테스트 | `unittest` (stdlib) |
@@ -43,7 +43,7 @@
 ### 설치 (1회, 전역)
 
 ```
-C:\winpython\WPy64-31180\python-3.11.8.amd64\python.exe -m pip install -e <backlog 폴더 경로>
+C:\winpython\WPy64-31180_cpu\python-3.11.8.amd64\python.exe -m pip install -e <backlog 폴더 경로>
 ```
 
 `[project.scripts]` 덕분에 WinPython `Scripts\`에 `backlog.exe`가 생기고,
